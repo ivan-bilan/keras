@@ -85,6 +85,13 @@ def test_fashion_mnist():
         assert len(x_train) == len(y_train) == 60000
         assert len(x_test) == len(y_test) == 10000
 
+def test_conll2000():
+    # only run data download tests 20% of the time
+    # to speed up frequent testing
+    random.seed(time.time())
+    if random.random() > 0.8:
+        (X_words, train, y_train), (X_test, X_pos_train, y_test), (index2word, index2pos, index2chunk) = conll2000.load_data()
+
 
 if __name__ == '__main__':
     pytest.main([__file__])

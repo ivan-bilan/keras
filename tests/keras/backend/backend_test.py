@@ -696,7 +696,24 @@ class TestBackend(object):
             assert_allclose(k.eval(k.logsumexp(k.variable(x_np), axis=0)),
                             1e4,
                             rtol=1e-5)
-
+	
+	@pytest.mark.parametrize('x_np, indices_np', [
+        (np.array([[3, 5, 7], [11, 13, 17]]), np.array([2, 1])),
+        (np.array([[[2, 3], [4, 5], [6, 7]],
+                   [[10, 11], [12, 13], [16, 17]]]), np.array([2, 1])),
+    ])
+    @pytest.mark.parametrize('K', [KTH, KTF], ids=["KTH", "KTF"])
+    def test_batch_gather(self, x_np, indices_np, K):
+        x = K.variable(x_np)
+        indices = K.variable(indices_np, dtype='int32')
+        batch_size = x_np.shape[0]
+        actual = K.eval(K.batch_gather(x, indices))
+        expected = x_np[np.arange(batch_size), indices_np]
+        print(x_np.shape, expected.shape)
+        assert_allclose(actual,
+                        expected,
+                        rtol=1e-5)
+						
     def test_switch(self):
         # scalar
         val = np.random.random()

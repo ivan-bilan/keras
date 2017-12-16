@@ -5,6 +5,7 @@ from ..engine import Layer
 from ..engine import Input
 from ..engine import InputLayer
 from ..engine import InputSpec
+from .crf import *
 from .merge import *
 from .core import *
 from .convolutional import *

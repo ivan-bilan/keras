@@ -618,7 +618,24 @@ def logsumexp(x, axis=None, keepdims=False):
     # so we can just write the expression directly:
     return T.log(T.sum(T.exp(x), axis=axis, keepdims=keepdims))
 
+def batch_gather(reference, indices):
+    '''Batchwise gathering of row indices.
 
+    The numpy equivalent is reference[np.arange(batch_size), indices],
+
+    # Arguments
+        reference: tensor with ndim >= 2 of shape
+          (batch_size, dim1, dim2, ..., dimN)
+        indices: 1d integer tensor of shape (batch_size) satisfiying
+          0 <= i < dim2 for each element i.
+
+    # Returns
+        A tensor with shape (batch_size, dim2, ..., dimN)
+        equal to reference[1:batch_size, indices]
+    '''
+    batch_size = shape(reference)[0]
+    return reference[T.arange(batch_size), indices]
+	
 def round(x):
     return T.round(x, mode='half_to_even')
 
